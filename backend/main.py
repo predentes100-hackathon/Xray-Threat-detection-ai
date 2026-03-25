@@ -29,7 +29,7 @@ except:
 
 # 2. Configure Gemini 2.0 Flash
 # IMPORTANT: Provide your actual Gemini API Key here or set it as an environment variable
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "AIzaSyBrzRjTmnwggxElD_P-cP2rAql4W27LDXs")
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "AIzaSyDh6HHSbseJIHgqerhQlBs66WyUsiCt390")
 genai.configure(api_key=GEMINI_API_KEY)
 gemini_model = genai.GenerativeModel("gemini-2.0-flash")
 
@@ -45,7 +45,9 @@ def get_gemini_recommendation(detected_items: str) -> str:
         return response.text.replace('\n', ' ').strip()
     except Exception as e:
         print(f"Gemini API Error: {e}")
-        return f"Warning: Requires manual secondary inspection for {detected_items}."
+        if "Clean Scan" in detected_items:
+            return "No anomalies detected by baseline heuristics. Proceed with standard clearance."
+        return f"CAUTION: Advanced LLM offline. Initiate manual inspection for suspected {detected_items} immediately."
 
 @app.post("/api/scan")
 async def process_scan(image: UploadFile = File(...)):
@@ -60,9 +62,10 @@ async def process_scan(image: UploadFile = File(...)):
     # 5. Extract insights and prompt Gemini
     if len(results) > 0 and len(results[0].boxes) > 0:
         # Get the detection with the highest confidence
-        box = results[0].boxes[0]
-        confidence = float(box.conf[0]) * 100
-        class_id = int(box.cls[0])
+        boxes = results[0].boxes
+        best_box = max(boxes, key=lambda b: float(b.conf[0]))
+        confidence = float(best_box.conf[0]) * 100
+        class_id = int(best_box.cls[0])
         threat_class = model.names[class_id]
         
         # Call Gemini using the detected threat
@@ -84,3 +87,4 @@ async def process_scan(image: UploadFile = File(...)):
             "riskScore": 0,
             "aiInsights": expert_insight
         }
+# Reload trigger

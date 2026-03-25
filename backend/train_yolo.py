@@ -104,13 +104,13 @@ def prepare_split(dataset_split, split_name, class_names):
                 print(f"Warning: skipped index {i} due to Error: {e}")
             continue
 
-def create_yaml(class_names):
+def create_yaml(class_names, has_val=True):
     """Generates the data.yaml file that YOLO uses for dataset mapping."""
     yaml_path = BASE_DIR / "dataset.yaml"
     data = {
         "path": str(BASE_DIR.absolute()),
         "train": "images/train",
-        "val": "images/val",
+        "val": "images/val" if has_val else "images/train",
         "names": {i: name for i, name in enumerate(class_names)}
     }
     with open(yaml_path, "w") as f:
@@ -155,7 +155,7 @@ def main():
     if val_subset:
         prepare_split(val_subset, "val", class_names)
 
-    yaml_path = create_yaml(class_names)
+    yaml_path = create_yaml(class_names, has_val=bool(val_subset))
 
     print("\n--- 3. Initializing and Training YOLOv11 ---")
     # Using 'n' for nano model. Ensure ultralytics package is up to date for v11 support
