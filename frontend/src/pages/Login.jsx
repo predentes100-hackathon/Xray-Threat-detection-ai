@@ -23,13 +23,13 @@ const Login = () => {
       }
     } catch (err) {
       if (err.code === 'auth/invalid-credential' || err.code === 'auth/user-not-found') {
-        setError('Invalid email or password.');
+        setError('ERR: CREDENTIALS_INVALID');
       } else if (err.code === 'auth/email-already-in-use') {
-        setError('Email already registered. Please sign in.');
+        setError('ERR: ID_ALREADY_REGISTERED');
       } else if (err.code === 'auth/weak-password') {
-        setError('Password must be at least 6 characters long.');
+        setError('ERR: PASSCODE_STRENGTH_WEAK');
       } else {
-        setError(err.message);
+        setError(`ERR: ${err.message.toUpperCase()}`);
       }
     } finally {
       setLoading(false);
@@ -38,50 +38,48 @@ const Login = () => {
 
   return (
     <div className="login-container">
-      <div className="login-card glass-card">
+      <div className="login-card">
         <div className="login-header">
-           <div className="logo-icon"></div>
-           <h2>Shieldex <span>Access</span></h2>
+           <h2>SHIELDEX // <span>NEXUS</span></h2>
+           <p className="login-subtitle">
+            {isLogin ? 'RESTRICTED ACCESS // DEPT. OF BORDER SECURITY' : 'AUTHORIZATION REQUIRED // NEW ANALYST REGISTRATION'}
+           </p>
         </div>
-        
-        <p className="login-subtitle">
-          {isLogin ? 'Sign in to access the Customs Intelligence Dashboard.' : 'Create a new analyst account.'}
-        </p>
 
         {error && <div className="error-alert">{error}</div>}
 
         <form onSubmit={handleSubmit} className="login-form">
           <div className="input-group">
-            <label>Analyst Email</label>
+            <label>Analyst ID (Email)</label>
             <input 
               type="email" 
               value={email} 
               onChange={(e) => setEmail(e.target.value)} 
               required 
               disabled={loading}
-              placeholder="analyst@shieldex.gov"
+              placeholder="OPERATIVE@SHIELDEX.GOV"
             />
           </div>
           <div className="input-group">
-            <label>Passcode</label>
+            <label>Secure Passcode</label>
             <input 
               type="password" 
               value={password} 
               onChange={(e) => setPassword(e.target.value)} 
               required 
               disabled={loading}
-              placeholder="••••••••"
+              placeholder="••••••••••••"
             />
           </div>
           
           <button type="submit" className="login-button" disabled={loading}>
-            {loading ? 'Authenticating...' : (isLogin ? 'Secure Sign In' : 'Create Account')}
+            {loading ? 'VERIFYING CREDENTIALS...' : (isLogin ? 'INITIALIZE SECURE LINK' : 'REQUEST CLEARANCE')}
           </button>
         </form>
 
         <div className="login-footer">
           <button type="button" className="toggle-mode-btn" onClick={() => setIsLogin(!isLogin)} disabled={loading}>
-            {isLogin ? 'Need an account? Sign up' : 'Already have an account? Sign in'}
+            {isLogin ? '> REQUEST NEW ANALYST CLEARANCE' : '> RETURN TO SECURE SIGN IN'}
           </button>
         </div>
       </div>

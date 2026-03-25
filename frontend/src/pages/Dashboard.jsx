@@ -124,12 +124,14 @@ function Dashboard({ user }) {
       <nav className="glass-nav">
         <div className="logo-container">
           <div className="logo-icon"></div>
-          <h1>Shieldex <span>Intelligence</span></h1>
+          <h1>SHIELDEX // <span>NEXUS</span></h1>
         </div>
         <div className="user-profile" style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <span style={{ fontSize: '0.85rem', color: '#94a3b8' }}>{user?.email}</span>
-          <button onClick={handleSignOut} className="btn-secondary" style={{ padding: '0.4rem 1rem', fontSize: '0.85rem' }}>
-            Logout
+          <span className="mono" style={{ fontSize: '0.85rem', color: 'var(--accent-color)' }}>
+            OP-ID: {user?.email}
+          </span>
+          <button onClick={handleSignOut} className="btn-secondary" style={{ padding: '0.4rem 1rem', fontSize: '0.85rem', letterSpacing: '1px' }}>
+            SECURE LOGOUT
           </button>
         </div>
       </nav>
@@ -138,8 +140,8 @@ function Dashboard({ user }) {
         {/* Left Column: Analysis Zone */}
         <section className="analysis-zone">
           <header className="page-header">
-            <h2>Customs Inspection</h2>
-            <p>Upload X-ray scans for real-time AI threat detection and analysis.</p>
+            <h2>BORDER INTELLIGENCE // X-RAY SCANNER</h2>
+            <p>INITIALIZE PROTOCOL: UPLOAD SCAN DATA FOR AUTOMATED THREAT CLASSIFICATION.</p>
           </header>
 
           <div 
@@ -158,10 +160,10 @@ function Dashboard({ user }) {
             
             {!selectedImage ? (
               <div className="upload-placeholder">
-                <div className="upload-icon">📁</div>
-                <h3>Drag & Drop X-ray Image</h3>
-                <p>or click to browse files</p>
-                <span className="supported-formats">Supports JPG, PNG, TIFF, DICOM</span>
+                <div className="upload-icon">⛶</div>
+                <h3>TARGET ACQUISITION</h3>
+                <p>DRAG & DROP IMAGE DATA</p>
+                <span className="supported-formats">SYS_REQ: JPG, PNG, TIFF, DICOM</span>
               </div>
             ) : (
               <div className="image-preview-container">
@@ -178,18 +180,18 @@ function Dashboard({ user }) {
               onClick={resetDashboard}
               disabled={!selectedImage || scanStatus === 'scanning' || scanStatus === 'analyzing'}
             >
-              Clear Image
+              ABORT SEQUENCE
             </button>
             <button 
               className={`scan-button ${scanStatus}`}
               onClick={handleScan}
               disabled={!selectedImage || scanStatus === 'scanning' || scanStatus === 'analyzing'}
             >
-              {scanStatus === 'idle' && 'Run Threat Analysis'}
-              {scanStatus === 'scanning' && 'Scanning Object...'}
-              {scanStatus === 'analyzing' && 'Generating Insights...'}
-              {scanStatus === 'complete' && 'Re-Scan Image'}
-              {scanStatus === 'error' && 'Analysis Failed'}
+              {scanStatus === 'idle' && 'INITIALIZE THREAT SCAN'}
+              {scanStatus === 'scanning' && 'ACQUIRING TARGET DATA...'}
+              {scanStatus === 'analyzing' && 'UPLINKING TO GEMINI AI...'}
+              {scanStatus === 'complete' && 'OVERRIDE / NEW SCAN'}
+              {scanStatus === 'error' && 'SYSTEM FAILURE / RETRY'}
             </button>
           </div>
         </section>
@@ -197,41 +199,47 @@ function Dashboard({ user }) {
         {/* Right Column: Intelligence Sidebar */}
         <aside className="intelligence-sidebar">
           <div className="results-panel glass-card">
-            <h3>Intelligence Report</h3>
+            <div className="terminal-header">
+              <span>SYS_STATUS: ONLINE</span>
+              <span>ENCRYPTION: AES-256</span>
+              <span>LINK: SECURE</span>
+            </div>
+            
+            <h3>TACTICAL REPORT</h3>
             
             {!results && scanStatus === 'idle' && (
               <div className="empty-state">
-                <div className="empty-icon">🛡️</div>
-                <p>Upload an image and run analysis to view risk scores and AI insights.</p>
+                <div className="empty-icon">📡</div>
+                <p>SYSTEM STANDBY. AWAITING FEED DATA FOR AI CLASSIFICATION PROTOCOL.</p>
               </div>
             )}
             
             {(scanStatus === 'scanning' || scanStatus === 'analyzing') && (
               <div className="loading-state">
                 <div className="spinner"></div>
-                <p>{scanStatus === 'scanning' ? 'Running YOLOv11 detector...' : 'Querying Gemini AI...'}</p>
+                <p>{scanStatus === 'scanning' ? 'RUNNING YOLO DETECTOR...' : 'QUERYING NEURAL NETWORK...'}</p>
               </div>
             )}
 
             {results && scanStatus === 'complete' && (
               <div className="report-content fade-in">
                 {/* Threat Type */}
-                <div className="threat-banner critical">
-                  <span className="status-dot"></span>
+                <div className={`threat-banner ${results.threatType === 'Clear' ? 'safe' : 'critical'}`}>
+                  <span className={`status-dot ${results.threatType === 'Clear' ? 'safe' : ''}`}></span>
                   <strong>{results.threatType}</strong>
                 </div>
 
                 {/* Metrics */}
                 <div className="metrics-container">
                   <div className="metric-box">
-                    <span className="metric-label">Risk Score</span>
-                    <div className="score-ring high-risk">
+                    <span className="metric-label">RISK FACTOR</span>
+                    <div className={`score-ring ${results.riskScore > 50 ? 'high-risk' : 'low-risk'}`}>
                       <span className="score-value">{results.riskScore}</span>
                       <span className="score-max">/100</span>
                     </div>
                   </div>
                   <div className="metric-box">
-                    <span className="metric-label">Confidence</span>
+                    <span className="metric-label">AI CONFIDENCE</span>
                     <div className="confidence-bar-container">
                       <div className="confidence-bar" style={{width: `${results.confidence}%`}}></div>
                     </div>
@@ -242,8 +250,8 @@ function Dashboard({ user }) {
                 {/* Gemini Insights */}
                 <div className="gemini-insights">
                   <div className="gemini-header">
-                    <h4>✨ AI Insights</h4>
-                    <span className="badge">Gemini Advanced</span>
+                    <h4>✨ EXPERT ANALYSIS</h4>
+                    <span className="badge">GEMINI // 2.0</span>
                   </div>
                   <div className="insight-text">
                     <p>{results.aiInsights}</p>
