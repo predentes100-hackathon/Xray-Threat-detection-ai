@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { signOut } from 'firebase/auth';
 import { db, auth } from '../firebase';
@@ -10,6 +10,17 @@ function Dashboard({ user }) {
   const [imageFile, setImageFile] = useState(null); // actual file for API
   const [results, setResults] = useState(null);
   const fileInputRef = useRef(null);
+
+  // Clear stale results whenever the page is refreshed (hard reload)
+  useEffect(() => {
+    const navEntry = performance.getEntriesByType('navigation')[0];
+    if (navEntry && navEntry.type === 'reload') {
+      setScanStatus('idle');
+      setSelectedImage(null);
+      setImageFile(null);
+      setResults(null);
+    }
+  }, []);
 
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -75,7 +86,7 @@ function Dashboard({ user }) {
       const formData = new FormData();
       formData.append('image', imageFile);
 
-      // 2. Send actual image to your local YOLOv11 + Gemini Python API
+      // 2. Send actual image to Gemini 1.5 Flash Vision API via FastAPI backend
       const response = await fetch('http://localhost:8000/api/scan', {
         method: 'POST',
         body: formData,
@@ -169,7 +180,7 @@ function Dashboard({ user }) {
               <div className="image-preview-container">
                 <img src={selectedImage} alt="X-ray scan preview" className="preview-image" />
                 {scanStatus === 'scanning' && <div className="scan-line"></div>}
-                {scanStatus === 'complete' && <div className="bounding-box-demo"></div>}
+                {scanStatus === 'complete' && results?.threatType !== 'Clear' && <div className="bounding-box-demo"></div>}
               </div>
             )}
           </div>
@@ -217,7 +228,7 @@ function Dashboard({ user }) {
             {(scanStatus === 'scanning' || scanStatus === 'analyzing') && (
               <div className="loading-state">
                 <div className="spinner"></div>
-                <p>{scanStatus === 'scanning' ? 'RUNNING YOLO DETECTOR...' : 'QUERYING NEURAL NETWORK...'}</p>
+                <p>{scanStatus === 'scanning' ? 'UPLOADING SCAN DATA...' : 'QUERYING GEMINI 1.5 FLASH...'}</p>
               </div>
             )}
 
@@ -251,7 +262,7 @@ function Dashboard({ user }) {
                 <div className="gemini-insights">
                   <div className="gemini-header">
                     <h4>✨ EXPERT ANALYSIS</h4>
-                    <span className="badge">GEMINI // 2.0</span>
+                    <span className="badge">GEMINI // 1.5</span>
                   </div>
                   <div className="insight-text">
                     <p>{results.aiInsights}</p>

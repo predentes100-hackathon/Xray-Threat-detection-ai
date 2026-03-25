@@ -3,6 +3,4 @@ uvicorn[standard]
 firebase-admin
 google-generativeai
 python-multipart
-ultralytics
-opencv-python-headless
-numpy
+Pillow
