@@ -1,0 +1,39 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --accent-color: #3b82f6;
+  --accent-glow: rgba(59, 130, 246, 0.5);
+  --success-color: #10b981;
+  --glass-bg: rgba(30, 41, 59, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  font-family: 'Outfit', Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  place-items: start;
+  min-width: 320px;
+  min-height: 100vh;
+  background: var(--bg-primary);
+  background-image: 
+    radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.15), transparent 25%),
+    radial-gradient(circle at 85% 30%, rgba(16, 185, 129, 0.1), transparent 25%);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+h1, h2, h3, p {
+  margin: 0;
+}

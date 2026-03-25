@@ -1,0 +1,20 @@
+# Environments
+backend/venv/
+backend/__pycache__/
+frontend/node_modules/
+frontend/.nx/
+.env
+
+# Models and Datasets
+backend/hf_yolo_dataset/
+backend/runs/
+backend/yolo11n.pt
+*.pt
+*.onnx
+
+# Sensitive Data
+backend/serviceAccountKey.json
+
+# OS files
+.DS_Store
+Thumbs.db
